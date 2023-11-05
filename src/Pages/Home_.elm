@@ -5,7 +5,7 @@ import Api.Article exposing (Article)
 import Api.PopularTagsList
 import Auth
 import Date
-import Effect exposing (Effect)
+import Effect exposing (Effect, replaceUrl)
 import Html exposing (..)
 import Html.Attributes as Attr
 import Html.Events exposing (onClick)
@@ -19,13 +19,18 @@ import Shared.Model exposing (SignInStatus(..))
 import Shared.Msg
 import Time exposing (Month(..), utc)
 import View exposing (View)
+-- import Html.Styled.Events exposing (..)
+-- import Html.Styled exposing (..)
+-- import Html.Styled.Attributes as Attr exposing (..)
+import Css exposing (..)
+-- import Browser.Navigation exposing (replaceUrl)
 
 
 layout : Auth.User -> Model -> Layouts.Layout
 layout user model =
     Layouts.HeaderAndFooter
         { headerAndFooter =
-            { title = "Home -Conduit"
+            { title = "Home -InteroptX"
             , user = user
             }
         }
@@ -60,6 +65,7 @@ type alias Model =
     , token : Maybe String
     , isFavoriteButtonClicked : Bool
     , clickedTag : String
+    , anchorId : String 
     }
 
 
@@ -84,6 +90,7 @@ init maybeUser () =
       , token = token
       , isFavoriteButtonClicked = False
       , clickedTag = ""
+      , anchorId = ""
       }
     , Effect.batch
         [ Api.Article.getFirst20ArticleBy
@@ -115,11 +122,19 @@ type Msg
     | UserClickedOnUnFavoriteArticle String
     | ArticleFavoriteApiResponded (Result Http.Error Article)
     | ArticleUnFavoriteApiResponded (Result Http.Error Article)
+    | SamePageNavigation String
 
 
 update : Auth.User -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
 update maybeUser _ msg model =
     case msg of
+        SamePageNavigation anchorId ->
+            ( { model | anchorId = anchorId } 
+            -- , Browser.Navigation.pushUrl Browser.Navigation.key (pageToUrl anchorId)
+            -- , Effect.none
+            , replaceUrl ( "#" ++ anchorId)
+            )
+
         ArticleApiResponded (Ok listOfArticle) ->
             ( { model | articleData = Api.Success listOfArticle }
             , Effect.none
@@ -265,7 +280,7 @@ subscriptions _ =
 
 view : Model -> View Msg
 view model =
-    { title = "Home -Conduit"
+    { title = "Home -InteroptX"
     , body = [ viewBody model ]
     }
 
@@ -284,29 +299,83 @@ viewBody model =
                 [ h1
                     [ Attr.class "logo-font"
                     ]
-                    [ text "conduit" ]
+                    [ text "InteroptX" ]
                 , p []
-                    [ text "A place to share your knowledge." ]
+                    [ text "Putting Knowledge Graphs to work for Semantic Interoperability" ]
                 ]
             ]
         , articleView model
         ]
 
+para1 =  p [] [text """Et labore necessitatibus necessitatibus in quas. 
+                Nostrum exercitationem sequi quas cupiditate possimus blanditiis aut aut quos, 
+                aliquid quos quos vel non quia vitae aut, voluptatem consequatur. 
+                Repellat dicta et neque nihil commodi, nostrum labore rerum at nemo blanditiis, 
+                qui sunt occaecati hic est ducimus at blanditiis omnis hic voluptate necessitatibus 
+                ullam quos qui quas omnis vitae consequatur unde ducimus error dicta est quae est est 
+                voluptate at maiores commodi non labore quas dolores nostrum, aut nostrum. 
+                Consectetur quaerat quas fugit blanditiis ipsum quos quos vitae sequi. 
+                Deserunt sapiente aliquid magnam blanditiis, ipsum, occaecati labore occaecati magnam 
+                facilis quos cupiditate exercitationem unde nihil deserunt ipsum nihil voluptate maiores, 
+                est voluptate sit quasi omnis excepturi, laborum in non enim reiciendis magnam aut."""]
+para2 =  p [] [text """Quos unde hic id doloribus, labore, sit sed aut fugiat aliquid dicta fugiat, labore doloribus, 
+                laborum sed magnam quaerat occaecati hic, possimus voluptate labore magnam possimus sunt maiores 
+                ducimus neque sequi, blanditiis sunt quos occaecati excepturi facilis blanditiis. 
+                Unde at tenetur quas hic esse, ducimus doloribus tenetur facilis repellat doloribus 
+                excepturi excepturi aliquid voluptatibus sunt necessitatibus consequuntur laborum neque 
+                nostrum necessitatibus nihil et nemo enim quasi labore beatae ullam id est excepturi 
+                consequuntur nostrum nulla in, hic asperiores. 
+                Aut maiores quas consequuntur voluptatem enim est, exercitationem quasi sed quaerat 
+                reiciendis consectetur nostrum rerum ducimus id nemo magnam cupiditate blanditiis 
+                magnam voluptatibus reiciendis quaerat voluptate excepturi esse unde hic. 
+                Vitae quia id esse voluptatibus nihil nihil eos vitae dolores quos. 
+                Cupiditate fugiat occaecati ipsum necessitatibus consequuntur."""]
 
+para3 = p [] [text """At quia eos consectetur reiciendis unde rerum ducimus vitae, et exercitationem 
+                quas labore unde reiciendis quas in exercitationem cupiditate at reiciendis 
+                qui nulla, at cupiditate reiciendis voluptatibus facilis hic fugit ullam rerum 
+                rerum fugit aliquid, consequuntur, quae, reiciendis sapiente tenetur quos, 
+                reiciendis neque error asperiores sequi, hic enim tenetur error. 
+                Blanditiis beatae quia tenetur esse. 
+                Reiciendis voluptatibus numquam beatae id repellat possimus sunt. 
+                At dicta repellat dicta nihil nostrum qui consectetur. 
+                Voluptatibus esse voluptatem aut fugit numquam eos hic dolores, nihil maiores 
+                esse, dicta cupiditate possimus sunt nihil, voluptate omnis, enim at quae 
+                dicta necessitatibus."""]
 articleView : Model -> Html Msg
 articleView model =
     div
-        [ Attr.class "container page"
-        ]
-        [ div
-            [ Attr.class "row"
-            ]
+        [ Attr.class "container page"]
+        [ div 
+            [Attr.class "row"] 
+            [ div 
+              [Attr.class "col-xs-12 col-md-8 offset-md-2"]
+              [ button [onClick (SamePageNavigation "section1") ] [ text "Go to Section 1" ]
+              , button [onClick (SamePageNavigation "section2") ] [ text "Go to Section 2" ]
+              ]
+           , div [ Attr.id "section1", Attr.class "col-xs-12 col-md-8 offset-md-2" ] 
+              [ div [] [
+                h2 [] [text "Section 1"]
+                , para1
+                , para2
+                , para3
+                ]
+              ]
+           , div [ Attr.id "section2", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
+             [ div [] [ 
+                h2 [] [text "Section 2" ]
+                , para3
+               ]
+             ]
+          , div
+            [ Attr.class "row"]
             [ div
                 [ Attr.class "col-md-9"
                 ]
                 (feedView model :: articleListView model)
             , popularTagView model
             ]
+          ]
         ]
 
 
@@ -389,7 +458,7 @@ popularTagListView model =
     case model.popularTagData of
         Api.Loading ->
             div []
-                [ Html.text "Loading..."
+                [ text "Loading..."
                 ]
 
         Api.Success popularTagList ->
@@ -398,7 +467,7 @@ popularTagListView model =
 
         Api.Failure httpError ->
             div []
-                [ Html.text (Api.Article.toUserFriendlyMessage httpError)
+                [ text (Api.Article.toUserFriendlyMessage httpError)
                 ]
 
 
@@ -406,7 +475,7 @@ popularTagRowView : String -> Html Msg
 popularTagRowView tag =
     a
         [ Attr.href ""
-        , Html.Events.onClick (UserClickedTagFeeds tag)
+        , onClick (UserClickedTagFeeds tag)
         , Attr.class "tag-pill tag-default"
         ]
         [ text tag ]
@@ -417,7 +486,7 @@ articleListView model =
     case model.articleData of
         Api.Loading ->
             [ div []
-                [ Html.text "Loading..."
+                [ text "Loading..."
                 ]
             ]
 
@@ -426,7 +495,7 @@ articleListView model =
 
         Api.Failure httpError ->
             [ div []
-                [ Html.text (Api.Article.toUserFriendlyMessage httpError)
+                [ text (Api.Article.toUserFriendlyMessage httpError)
                 ]
             ]
 
@@ -467,7 +536,7 @@ articleCardView isFavoriteButtonClicked article =
                     , ( "btn-primary", article.favorited )
                     , ( "disabled", isFavoriteButtonClicked )
                     ]
-                , Html.Events.onClick
+                , onClick
                     (if article.favorited then
                         UserClickedOnUnFavoriteArticle article.slug
 

@@ -1,5 +1,5 @@
 port module Effect exposing
-    ( Effect, none, map, batch
+    ( Effect, none, map, batch, replaceUrl
     , fromSharedMsg
     , pushRoute, replaceRoute, loadExternalUrl
     , pushUrlPath
@@ -45,6 +45,11 @@ type Effect msg
 none : Effect msg
 none =
     None
+
+
+replaceUrl : String -> Effect msg
+replaceUrl s =
+    ReplaceUrl s
 
 
 batch : List (Effect msg) -> Effect msg
