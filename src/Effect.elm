@@ -48,7 +48,7 @@ none =
 
 
 replaceUrl : String -> Effect msg
-replaceUrl s =
+replaceUrl s =   
     ReplaceUrl s
 
 
@@ -65,7 +65,6 @@ fromSharedMsg =
 sendCmd : Cmd msg -> Effect msg
 sendCmd =
     SendCmd
-
 
 
 -- ROUTING
@@ -120,6 +119,8 @@ save keyValueRecord =
     SaveToLocalStorage keyValueRecord
 
 
+-- Define a port to send the element ID to JavaScript
+port scrollTo : String -> Cmd msg
 
 -- MAP
 
@@ -178,7 +179,16 @@ toCmd options effect =
             Browser.Navigation.pushUrl options.key url
 
         ReplaceUrl url ->
-            Browser.Navigation.replaceUrl options.key url
+            -- Browser.Navigation.replaceUrl options.key url
+            let
+                -- Extract the hash from the URL and remove the leading '#'
+                maybeHash =
+                    String.dropLeft 1 <| Maybe.withDefault "" (Just url)
+            in
+            -- If there is a hash, tell JavaScript to scroll to that element
+                case maybeHash of
+                    ""   -> Browser.Navigation.replaceUrl options.key url
+                    hash -> scrollTo hash        
 
         LoadExternalUrl url ->
             Browser.Navigation.load url
