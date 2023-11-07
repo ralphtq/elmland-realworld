@@ -98,7 +98,7 @@ navbar maybeUser route =
                 [ Attr.class "navbar-brand"
                 , Attr.href "/"
                 ]
-                [ text "conduit" ]
+                [ text "interoptx" ]
             , ul
                 [ Attr.class "nav navbar-nav pull-xs-right"
                 ]
@@ -190,11 +190,20 @@ footerView =
                 [ Attr.href "/"
                 , Attr.class "logo-font"
                 ]
-                [ text "conduit" ]
+                [ text "This is " ]
             , span
                 [ Attr.class "attribution"
                 ]
-                [ text "An interactive learning project from"
+                [ text "An interactive semantic technology explorer from "
+                , a
+                    [ Attr.href "https://interoptx.com"
+                    ]
+                    [ text "InteroptX" ]
+                ]
+            , span
+                [ Attr.class "attribution"
+                ]
+                [ text "Inspired by the interactive learning project from"
                 , a
                     [ Attr.href "https://thinkster.io"
                     ]

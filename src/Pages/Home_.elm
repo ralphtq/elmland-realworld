@@ -25,6 +25,179 @@ import View exposing (View)
 import Css exposing (..)
 -- import Browser.Navigation exposing (replaceUrl)
 
+logo : String -> Html msg
+logo logoFilePath =
+    img
+        [ Attr.src logoFilePath -- "images/interoptx-icon.png"
+        , Attr.style "display" "inlineBlock"
+        , Attr.style "padding" "20px"
+        ]
+        []
+        --     , hover
+        --         [ borderColor theme.primary
+        --         , borderRadius (px 10)
+        --         ]
+
+theme : { secondary : Color, primary : Color }
+theme =
+    { primary = hex "55af6a"
+    , secondary = rgb 250 240 230
+    }
+
+-- bannerCSS : Attribute msg
+bannerCSS =  [  Attr.style "background-color" "rgb(250,250,255)"
+              , Attr.style "padding" "4px"
+                ]
+
+bannerLinkCSS =  [
+       Attr.style "fontFamily" "sansSerif"
+       , Attr.style "background-color" "rgb(250,250,255)"
+       , Attr.style "border-color" "rgb(250,250,255)"
+       , Attr.style "font-size" "32px"
+       , Attr.style "font-weight" "bold"
+      ]
+
+-- subBannerCSS : Attribute msg
+subBannerCSS = [  Attr.style "fontFamily" "sansSerif"
+                , Attr.style "text-align" "center"
+                , Attr.style "font-size" "48px"
+                , Attr.style "font-weight" "bold"
+                , Attr.style "font-style" "oblique"
+                , Attr.style "padding-top" "-100px"
+                , Attr.style "padding-bottom" "30px"
+                ]
+-- websiteNameCSS : Attribute msg
+websiteNameCSS = [Attr.style "padding-bottom" "60px"
+               , Attr.style "font-size" "48px"
+               , Attr.style "padding-top" "40px"
+               , Attr.style "margin-left" "-100px"
+               ]
+
+bannerButtonCSS idRef = [  Attr.style "fontFamily" "sansSerif"
+                , Attr.style "text-align" "center"
+                , Attr.style "font-size" "32px"
+                , Attr.style "font-weight" "normal"
+                , Attr.style "padding-right" "80px"
+                , Attr.style "background-color" "rgb(250,250,255)"
+                , Attr.style "border-color" "rgb(250,250,255)"
+                , onClick (SamePageNavigation idRef) 
+                ]
+    --   , hover
+    --     [ borderColor theme.primary
+    --     , borderRadius (px 10)
+    --     , borderStyle Css.solid
+    --     , borderWidth (px 1)
+    --     ]
+
+renderButton styleClass label idRef =
+    button
+        [ Attr.class <| "btn " ++ styleClass
+        , Attr.style "display" "flex"
+        , Attr.style "color" "black"
+        , Attr.style "background-color" "rgb(250,250,255)"
+        , Attr.style "border-color" "rgb(250,250,255)"
+        , Attr.style "font-size" "24px"
+        , Attr.style "height" "32px"
+        , onClick (SamePageNavigation idRef) ]
+        [text label]
+
+mainBanner : Html Msg
+mainBanner =  div [Attr.class "row"] 
+               [ div [Attr.class "col text-center" ]
+                 [ logo "images/interoptx-icon.png"]             
+               , renderColumn ([h3 websiteNameCSS [text "InteroptX"]]) 
+            , renderButton "btn-primary m-1" "Contact Us" "contactUs"
+            , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
+            , renderButton "btn-primary m-1" "Technologies" "technologies"
+            , renderButton "btn-primary m-1" "Knowledge Graphs" "knowledgeGraphs"
+            , renderButton "btn-primary m-1" "The Team" "theTeam"
+            , renderButton "btn-primary m-1" "About Us" "aboutUS"
+             ]
+    
+
+subBanner : Html msg
+subBanner = h2
+            subBannerCSS
+            [ text "Putting Knowledge Graphs to work" ]
+
+renderColumn content =
+    div
+        [ Attr.class "col-sm", Attr.style "padding-left" "100px"]
+        content
+
+-- Define a clearfix as a styled component
+clearfixDiv : Html msg
+clearfixDiv =
+    div
+        [ Attr.style "clear" "both" ]
+        []
+
+renderImage image = img
+        [ Attr.src image
+         , Attr.style "display" "inlineBlock"
+         , Attr.style "width" "1000px"
+         , Attr.style "padding" "20px"
+        ]
+        []
+-- reason_for_being : Html msg
+reason_for_being : Html msg
+reason_for_being = div [] 
+  [ text """
+InteroptX provides computing frameworks, libraries and automation for data harmonization, 
+aggregation and transformations.
+Knowledge graphs are based on semantic technology standards.
+Modern software engineering approaches are based on Functional Programming.
+Together they achieve high quality, high performance and scalable transformations.
+"""]
+semantic_interoperability : Html msg
+semantic_interoperability = div [] 
+ [ text """
+  Semantic Interoperability explained.
+"""
+ ]
+
+importance_content : Html msg
+importance_content = text """
+  Importance explained.
+"""  
+
+topic idRef heading image content = div 
+       [Attr.id idRef, Attr.class "row"]
+       [ 
+         renderColumn [renderImage image]
+       , renderColumn 
+            [h2 [Attr.style "font-weight" "bold"] [text heading]
+           , div 
+           [Attr.style "padding-right" "200px"
+            , Attr.style "font-size" "1.5rem"
+           ] content
+           ]
+       ]
+
+interoperability_image1 = "images/iStock-689799380.jpg"
+
+interoperability_image2 = "images/iStock-959888418.jpg"
+hvac_image1 = "images/iStock-1437896463.jpg"
+medicine_image1 = "images/iStock-1499814869.jpg"
+homePageContent = div [Attr.class "row"]
+      [
+        topic  "aboutUs" "About Us" interoperability_image1 
+            [ reason_for_being]
+       , topic "knowledgeGraphs" "Knowledge Graphs and Semantic Interoperability"
+            interoperability_image2
+            [ semantic_interoperability]
+      , topic "whyThisIsImportant" "Why this is important" 
+            medicine_image1 
+            [ importance_content]
+      , topic  "whoWeAre" "Who are we"  medicine_image1 
+            [ text "we are ..."]
+      , topic  "contactUs" "For more information" medicine_image1 
+            [ text "..."] 
+      ] 
+
+
+    
+      
 
 layout : Auth.User -> Model -> Layouts.Layout
 layout user model =
@@ -130,8 +303,6 @@ update maybeUser _ msg model =
     case msg of
         SamePageNavigation anchorId ->
             ( { model | anchorId = anchorId } 
-            -- , Browser.Navigation.pushUrl Browser.Navigation.key (pageToUrl anchorId)
-            -- , Effect.none
             , replaceUrl ( "#" ++ anchorId)
             )
 
@@ -291,20 +462,21 @@ viewBody model =
         [ Attr.class "home-page"
         ]
         [ div
-            [ Attr.class "banner"
+            [ -- Attr.class "banner"
             ]
             [ div
                 [ Attr.class "container"
+                , Attr.style "max-width" "1600px"
                 ]
-                [ h1
-                    [ Attr.class "logo-font"
-                    ]
-                    [ text "InteroptX" ]
-                , p []
-                    [ text "Putting Knowledge Graphs to work for Semantic Interoperability" ]
+                [ div
+                  bannerCSS
+                  [ mainBanner
+                  , subBanner
+                  ]
                 ]
             ]
-        , articleView model
+        , homePageContent
+        -- , articleView model
         ]
 
 para1 =  p [] [text """Et labore necessitatibus necessitatibus in quas. 
@@ -355,7 +527,10 @@ articleView model =
               ]
            , div [ Attr.id "section1", Attr.class "col-xs-12 col-md-8 offset-md-2" ] 
               [ div [] [
-                h2 [] [text "Section 1"]
+                h2 [ Attr.style "background-color" "gray"
+                   , Attr.style "height" "90px"
+                   , Attr.style "width" "100%"] 
+                   [text "Section 1"]
                 , para1
                 , para2
                 , para3
@@ -363,7 +538,10 @@ articleView model =
               ]
            , div [ Attr.id "section2", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
              [ div [] [ 
-                h2 [] [text "Section 2" ]
+                h2 [ Attr.style "background-color" "lightgreen"
+                   , Attr.style "height" "90px"
+                   , Attr.style "width" "100%"]
+                    [text "Section 2" ]
                 , para3
                ]
              ]
