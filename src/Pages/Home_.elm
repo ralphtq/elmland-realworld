@@ -19,16 +19,12 @@ import Shared.Model exposing (SignInStatus(..))
 import Shared.Msg
 import Time exposing (Month(..), utc)
 import View exposing (View)
--- import Html.Styled.Events exposing (..)
--- import Html.Styled exposing (..)
--- import Html.Styled.Attributes as Attr exposing (..)
 import Css exposing (..)
--- import Browser.Navigation exposing (replaceUrl)
 
 logo : String -> Html msg
 logo logoFilePath =
     img
-        [ Attr.src logoFilePath -- "images/interoptx-icon.png"
+        [ Attr.src logoFilePath
         , Attr.style "display" "inlineBlock"
         , Attr.style "padding" "20px"
         ]
@@ -44,11 +40,13 @@ theme =
     , secondary = rgb 250 240 230
     }
 
--- bannerCSS : Attribute msg
+
+bannerCSS : List (Attribute msg)
 bannerCSS =  [  Attr.style "background-color" "rgb(250,250,255)"
               , Attr.style "padding" "4px"
                 ]
 
+bannerLinkCSS : List (Attribute msg)
 bannerLinkCSS =  [
        Attr.style "fontFamily" "sansSerif"
        , Attr.style "background-color" "rgb(250,250,255)"
@@ -57,7 +55,7 @@ bannerLinkCSS =  [
        , Attr.style "font-weight" "bold"
       ]
 
--- subBannerCSS : Attribute msg
+subBannerCSS : List (Attribute msg)
 subBannerCSS = [  Attr.style "fontFamily" "sansSerif"
                 , Attr.style "text-align" "center"
                 , Attr.style "font-size" "48px"
@@ -66,13 +64,15 @@ subBannerCSS = [  Attr.style "fontFamily" "sansSerif"
                 , Attr.style "padding-top" "-100px"
                 , Attr.style "padding-bottom" "30px"
                 ]
--- websiteNameCSS : Attribute msg
+
+websiteNameCSS : List (Attribute msg)
 websiteNameCSS = [Attr.style "padding-bottom" "60px"
                , Attr.style "font-size" "48px"
                , Attr.style "padding-top" "40px"
                , Attr.style "margin-left" "-100px"
                ]
 
+bannerButtonCSS : String -> List (Attribute Msg)
 bannerButtonCSS idRef = [  Attr.style "fontFamily" "sansSerif"
                 , Attr.style "text-align" "center"
                 , Attr.style "font-size" "32px"
@@ -82,13 +82,8 @@ bannerButtonCSS idRef = [  Attr.style "fontFamily" "sansSerif"
                 , Attr.style "border-color" "rgb(250,250,255)"
                 , onClick (SamePageNavigation idRef) 
                 ]
-    --   , hover
-    --     [ borderColor theme.primary
-    --     , borderRadius (px 10)
-    --     , borderStyle Css.solid
-    --     , borderWidth (px 1)
-    --     ]
 
+renderButton : String -> String -> String -> Html Msg
 renderButton styleClass label idRef =
     button
         [ Attr.class <| "btn " ++ styleClass
@@ -106,20 +101,22 @@ mainBanner =  div [Attr.class "row"]
                [ div [Attr.class "col text-center" ]
                  [ logo "images/interoptx-icon.png"]             
                , renderColumn ([h3 websiteNameCSS [text "InteroptX"]]) 
-            , renderButton "btn-primary m-1" "Contact Us" "contactUs"
-            , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
+            , renderButton "btn-primary m-1" "What we provide" "whatWeProvide"
             , renderButton "btn-primary m-1" "Technologies" "technologies"
             , renderButton "btn-primary m-1" "Knowledge Graphs" "knowledgeGraphs"
-            , renderButton "btn-primary m-1" "The Team" "theTeam"
-            , renderButton "btn-primary m-1" "About Us" "aboutUS"
+            , renderButton "btn-primary m-1" "Who Are We" "whoAreWe"
+            , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
+            , renderButton "btn-primary m-1" "Contact Us" "contactUs"
+            -- , renderButton "btn-primary m-1" "About Us" "aboutUS"
              ]
     
 
 subBanner : Html msg
 subBanner = h2
             subBannerCSS
-            [ text "Putting Knowledge Graphs to work" ]
+            [ text "Making and Putting Knowledge Graphs to Work" ]
 
+renderColumn : List (Html msg) -> Html msg
 renderColumn content =
     div
         [ Attr.class "col-sm", Attr.style "padding-left" "100px"]
@@ -132,6 +129,7 @@ clearfixDiv =
         [ Attr.style "clear" "both" ]
         []
 
+renderImage : String -> Html msg
 renderImage image = img
         [ Attr.src image
          , Attr.style "display" "inlineBlock"
@@ -139,20 +137,46 @@ renderImage image = img
          , Attr.style "padding" "20px"
         ]
         []
--- reason_for_being : Html msg
 reason_for_being : Html msg
 reason_for_being = div [] 
+  [ p [] [text """
+Knowledge Graph based applications are hard to build.
+First there are key practices to be adopted in the making and deployment of knowledge graphs.
+Second making user interfaces based on semantic technoloies is a new and demanding job.
+Third scalability of data, of the user experience, and the developer experience are challenges.
+"""
+  ]
+  , p[] [ text """
+InteroptX's reason for being is to provide consulting and assets for addressing these challenges.
+"""
+  ]
+  ]
+semantic_interoperability : Html msg
+semantic_interoperability = div [] 
+ [ text """
+  Semantic Interoperability explained.
+"""
+ ]
+ 
+technologies : Html msg
+technologies = div [] 
   [ text """
 InteroptX provides computing frameworks, libraries and automation for data harmonization, 
 aggregation and transformations.
 Knowledge graphs are based on semantic technology standards.
 Modern software engineering approaches are based on Functional Programming.
 Together they achieve high quality, high performance and scalable transformations.
-"""]
-semantic_interoperability : Html msg
-semantic_interoperability = div [] 
- [ text """
-  Semantic Interoperability explained.
+"""
+ ]
+
+whatWeProvide : Html msg
+whatWeProvide = div [] 
+  [ text """
+InteroptX provides computing frameworks, libraries and automation for data harmonization, 
+aggregation and transformations.
+Knowledge graphs are based on semantic technology standards.
+Modern software engineering approaches are based on Functional Programming.
+Together they achieve high quality, high performance and scalable transformations.
 """
  ]
 
@@ -161,17 +185,32 @@ importance_content = text """
   Importance explained.
 """  
 
-topic idRef heading image content = div 
+topicWithImageOnLeft : String -> String -> String -> List (Html msg) -> Html msg
+topicWithImageOnLeft idRef heading image content = div 
        [Attr.id idRef, Attr.class "row"]
        [ 
          renderColumn [renderImage image]
        , renderColumn 
             [h2 [Attr.style "font-weight" "bold"] [text heading]
            , div 
-           [Attr.style "padding-right" "200px"
+           [  Attr.style "padding-right" "200px"
             , Attr.style "font-size" "1.5rem"
            ] content
            ]
+       ]
+
+topicWithImageOnRight : String -> String -> String -> List (Html msg) -> Html msg
+topicWithImageOnRight idRef heading image content = div 
+       [Attr.id idRef, Attr.class "row"]
+       [ 
+        renderColumn 
+            [h2 [Attr.style "font-weight" "bold"] [text heading]
+           , div 
+           [  Attr.style "padding-right" "200px"
+            , Attr.style "font-size" "1.5rem"
+           ] content
+           ]
+        ,renderColumn [renderImage image]
        ]
 
 interoperability_image1 = "images/iStock-689799380.jpg"
@@ -181,23 +220,27 @@ hvac_image1 = "images/iStock-1437896463.jpg"
 medicine_image1 = "images/iStock-1499814869.jpg"
 homePageContent = div [Attr.class "row"]
       [
-        topic  "aboutUs" "About Us" interoperability_image1 
+        topicWithImageOnLeft  "aboutUs" "About Us" interoperability_image1 
             [ reason_for_being]
-       , topic "knowledgeGraphs" "Knowledge Graphs and Semantic Interoperability"
+       , topicWithImageOnRight "knowledgeGraphs" "Knowledge Graphs and Semantic Interoperability"
             interoperability_image2
             [ semantic_interoperability]
-      , topic "whyThisIsImportant" "Why this is important" 
+      , topicWithImageOnLeft "whyThisIsImportant" "Why this is important" 
             medicine_image1 
             [ importance_content]
-      , topic  "whoWeAre" "Who are we"  medicine_image1 
-            [ text "we are ..."]
-      , topic  "contactUs" "For more information" medicine_image1 
+      , topicWithImageOnRight "technologies" "Technologies"
+            medicine_image1
+            [technologies]
+      , topicWithImageOnLeft "whatWeProvide" "What we provide"
+            medicine_image1
+            [whatWeProvide]
+      , topicWithImageOnLeft  "whoAreWe" "Who are we"  
+            medicine_image1 
+            [ text "we are Ralph Hodgson, Minor Gordon and ..."]
+      , topicWithImageOnLeft  "contactUs" "For more information" medicine_image1 
             [ text "..."] 
       ] 
-
-
-    
-      
+   
 
 layout : Auth.User -> Model -> Layouts.Layout
 layout user model =
