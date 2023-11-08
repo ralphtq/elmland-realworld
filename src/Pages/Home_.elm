@@ -20,6 +20,20 @@ import Shared.Msg
 import Time exposing (Month(..), utc)
 import View exposing (View)
 import Css exposing (..)
+import Markdown.Block as Markdown
+import Markdown.Parser as Markdown
+import Markdown.Renderer as Markdown
+import Markdown.HomePageContent exposing (..)
+
+
+markdownToHTML : String -> Html msg
+markdownToHTML mdText =
+   mdText
+        |> Markdown.parse
+        |> Result.mapError (List.map Markdown.deadEndToString >> String.join "\n")
+        |> Result.andThen (Markdown.render Markdown.defaultHtmlRenderer)
+        |> Result.map (Html.main_ [])
+        |> Result.withDefault (Html.text "Error occurred. This shouldn't happen.")
 
 logo : String -> Html msg
 logo logoFilePath =
@@ -72,17 +86,6 @@ websiteNameCSS = [Attr.style "padding-bottom" "60px"
                , Attr.style "margin-left" "-100px"
                ]
 
-bannerButtonCSS : String -> List (Attribute Msg)
-bannerButtonCSS idRef = [  Attr.style "fontFamily" "sansSerif"
-                , Attr.style "text-align" "center"
-                , Attr.style "font-size" "32px"
-                , Attr.style "font-weight" "normal"
-                , Attr.style "padding-right" "80px"
-                , Attr.style "background-color" "rgb(250,250,255)"
-                , Attr.style "border-color" "rgb(250,250,255)"
-                , onClick (SamePageNavigation idRef) 
-                ]
-
 renderButton : String -> String -> String -> Html Msg
 renderButton styleClass label idRef =
     button
@@ -107,7 +110,6 @@ mainBanner =  div [Attr.class "row"]
             , renderButton "btn-primary m-1" "Who Are We" "whoAreWe"
             , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
             , renderButton "btn-primary m-1" "Contact Us" "contactUs"
-            -- , renderButton "btn-primary m-1" "About Us" "aboutUS"
              ]
     
 
@@ -122,13 +124,6 @@ renderColumn content =
         [ Attr.class "col-sm", Attr.style "padding-left" "100px"]
         content
 
--- Define a clearfix as a styled component
-clearfixDiv : Html msg
-clearfixDiv =
-    div
-        [ Attr.style "clear" "both" ]
-        []
-
 renderImage : String -> Html msg
 renderImage image = img
         [ Attr.src image
@@ -137,53 +132,6 @@ renderImage image = img
          , Attr.style "padding" "20px"
         ]
         []
-reason_for_being : Html msg
-reason_for_being = div [] 
-  [ p [] [text """
-Knowledge Graph based applications are hard to build.
-First there are key practices to be adopted in the making and deployment of knowledge graphs.
-Second making user interfaces based on semantic technoloies is a new and demanding job.
-Third scalability of data, of the user experience, and the developer experience are challenges.
-"""
-  ]
-  , p[] [ text """
-InteroptX's reason for being is to provide consulting and assets for addressing these challenges.
-"""
-  ]
-  ]
-semantic_interoperability : Html msg
-semantic_interoperability = div [] 
- [ text """
-  Semantic Interoperability explained.
-"""
- ]
- 
-technologies : Html msg
-technologies = div [] 
-  [ text """
-InteroptX provides computing frameworks, libraries and automation for data harmonization, 
-aggregation and transformations.
-Knowledge graphs are based on semantic technology standards.
-Modern software engineering approaches are based on Functional Programming.
-Together they achieve high quality, high performance and scalable transformations.
-"""
- ]
-
-whatWeProvide : Html msg
-whatWeProvide = div [] 
-  [ text """
-InteroptX provides computing frameworks, libraries and automation for data harmonization, 
-aggregation and transformations.
-Knowledge graphs are based on semantic technology standards.
-Modern software engineering approaches are based on Functional Programming.
-Together they achieve high quality, high performance and scalable transformations.
-"""
- ]
-
-importance_content : Html msg
-importance_content = text """
-  Importance explained.
-"""  
 
 topicWithImageOnLeft : String -> String -> String -> List (Html msg) -> Html msg
 topicWithImageOnLeft idRef heading image content = div 
@@ -218,27 +166,28 @@ interoperability_image1 = "images/iStock-689799380.jpg"
 interoperability_image2 = "images/iStock-959888418.jpg"
 hvac_image1 = "images/iStock-1437896463.jpg"
 medicine_image1 = "images/iStock-1499814869.jpg"
+homePageContent : Html msg
 homePageContent = div [Attr.class "row"]
       [
         topicWithImageOnLeft  "aboutUs" "About Us" interoperability_image1 
-            [ reason_for_being]
+           [ markdownToHTML whyInteroptx]
        , topicWithImageOnRight "knowledgeGraphs" "Knowledge Graphs and Semantic Interoperability"
             interoperability_image2
-            [ semantic_interoperability]
+            [ markdownToHTML semanticInteroperability]
       , topicWithImageOnLeft "whyThisIsImportant" "Why this is important" 
             medicine_image1 
-            [ importance_content]
+            [ markdownToHTML importanceContent]
       , topicWithImageOnRight "technologies" "Technologies"
             medicine_image1
-            [technologies]
+           [ markdownToHTML technologies]
       , topicWithImageOnLeft "whatWeProvide" "What we provide"
             medicine_image1
-            [whatWeProvide]
-      , topicWithImageOnLeft  "whoAreWe" "Who are we"  
+            [markdownToHTML whatWeProvide]
+      , topicWithImageOnLeft  "whoAreWe" "Who We Are"  
             medicine_image1 
-            [ text "we are Ralph Hodgson, Minor Gordon and ..."]
+            [ markdownToHTML whoWeAre]
       , topicWithImageOnLeft  "contactUs" "For more information" medicine_image1 
-            [ text "..."] 
+            [ markdownToHTML contactUs] 
       ] 
    
 
