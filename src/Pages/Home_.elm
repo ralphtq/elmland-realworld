@@ -4,6 +4,7 @@ import Api
 import Api.Article exposing (Article)
 import Api.PopularTagsList
 import Auth
+import Css exposing (..)
 import Date
 import Effect exposing (Effect, replaceUrl)
 import Html exposing (..)
@@ -12,28 +13,29 @@ import Html.Events exposing (onClick)
 import Http
 import Iso8601 exposing (toTime)
 import Layouts
-import Page exposing (Page)
-import Route exposing (Route)
-import Shared 
-import Shared.Model exposing (SignInStatus(..))
-import Shared.Msg
-import Time exposing (Month(..), utc)
-import View exposing (View)
-import Css exposing (..)
 import Markdown.Block as Markdown
+import Markdown.HomePageContent exposing (..)
 import Markdown.Parser as Markdown
 import Markdown.Renderer as Markdown
-import Markdown.HomePageContent exposing (..)
+import Page exposing (Page)
+import Route exposing (Route)
+import Shared
+import Shared.Model exposing (SignInStatus(..))
+import Shared.Msg
+import Shared.Types exposing (..)
+import Time exposing (Month(..), utc)
+import View exposing (View)
 
 
-markdownToHTML : String -> Html msg
+markdownToHTML : MarkdownString -> Html msg
 markdownToHTML mdText =
-   mdText
+    mdText
         |> Markdown.parse
         |> Result.mapError (List.map Markdown.deadEndToString >> String.join "\n")
         |> Result.andThen (Markdown.render Markdown.defaultHtmlRenderer)
         |> Result.map (Html.main_ [])
         |> Result.withDefault (Html.text "Error occurred. This shouldn't happen.")
+
 
 logo : String -> Html msg
 logo logoFilePath =
@@ -43,10 +45,14 @@ logo logoFilePath =
         , Attr.style "padding" "20px"
         ]
         []
-        --     , hover
-        --         [ borderColor theme.primary
-        --         , borderRadius (px 10)
-        --         ]
+
+
+
+--     , hover
+--         [ borderColor theme.primary
+--         , borderRadius (px 10)
+--         ]
+
 
 theme : { secondary : Color, primary : Color }
 theme =
@@ -56,35 +62,42 @@ theme =
 
 
 bannerCSS : List (Attribute msg)
-bannerCSS =  [  Attr.style "background-color" "rgb(250,250,255)"
-              , Attr.style "padding" "4px"
-                ]
+bannerCSS =
+    [ Attr.style "background-color" "rgb(250,250,255)"
+    , Attr.style "padding" "4px"
+    ]
+
 
 bannerLinkCSS : List (Attribute msg)
-bannerLinkCSS =  [
-       Attr.style "fontFamily" "sansSerif"
-       , Attr.style "background-color" "rgb(250,250,255)"
-       , Attr.style "border-color" "rgb(250,250,255)"
-       , Attr.style "font-size" "32px"
-       , Attr.style "font-weight" "bold"
-      ]
+bannerLinkCSS =
+    [ Attr.style "fontFamily" "sansSerif"
+    , Attr.style "background-color" "rgb(250,250,255)"
+    , Attr.style "border-color" "rgb(250,250,255)"
+    , Attr.style "font-size" "32px"
+    , Attr.style "font-weight" "bold"
+    ]
+
 
 subBannerCSS : List (Attribute msg)
-subBannerCSS = [  Attr.style "fontFamily" "sansSerif"
-                , Attr.style "text-align" "center"
-                , Attr.style "font-size" "48px"
-                , Attr.style "font-weight" "bold"
-                , Attr.style "font-style" "oblique"
-                , Attr.style "padding-top" "-100px"
-                , Attr.style "padding-bottom" "30px"
-                ]
+subBannerCSS =
+    [ Attr.style "fontFamily" "sansSerif"
+    , Attr.style "text-align" "center"
+    , Attr.style "font-size" "48px"
+    , Attr.style "font-weight" "bold"
+    , Attr.style "font-style" "oblique"
+    , Attr.style "padding-top" "-100px"
+    , Attr.style "padding-bottom" "30px"
+    ]
+
 
 websiteNameCSS : List (Attribute msg)
-websiteNameCSS = [Attr.style "padding-bottom" "60px"
-               , Attr.style "font-size" "48px"
-               , Attr.style "padding-top" "40px"
-               , Attr.style "margin-left" "-100px"
-               ]
+websiteNameCSS =
+    [ Attr.style "padding-bottom" "60px"
+    , Attr.style "font-size" "48px"
+    , Attr.style "padding-top" "40px"
+    , Attr.style "margin-left" "-100px"
+    ]
+
 
 renderButton : String -> String -> String -> Html Msg
 renderButton styleClass label idRef =
@@ -96,106 +109,116 @@ renderButton styleClass label idRef =
         , Attr.style "border-color" "rgb(250,250,255)"
         , Attr.style "font-size" "24px"
         , Attr.style "height" "32px"
-        , onClick (SamePageNavigation idRef) ]
-        [text label]
+        , onClick (SamePageNavigation idRef)
+        ]
+        [ text label ]
+
 
 mainBanner : Html Msg
-mainBanner =  div [Attr.class "row"] 
-               [ div [Attr.class "col text-center" ]
-                 [ logo "images/interoptx-icon.png"]             
-               , renderColumn ([h3 websiteNameCSS [text "InteroptX"]]) 
-            , renderButton "btn-primary m-1" "What we provide" "whatWeProvide"
-            , renderButton "btn-primary m-1" "Technologies" "technologies"
-            , renderButton "btn-primary m-1" "Knowledge Graphs" "knowledgeGraphs"
-            , renderButton "btn-primary m-1" "Who Are We" "whoAreWe"
-            , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
-            , renderButton "btn-primary m-1" "Contact Us" "contactUs"
-             ]
-    
+mainBanner =
+    div [ Attr.class "row" ]
+        [ div [ Attr.class "col text-center" ]
+            [ logo "images/interoptx-icon.png" ]
+        , renderColumn [ h3 websiteNameCSS [ text "InteroptX" ] ]
+        , renderButton "btn-primary m-1" "What we provide" "whatWeProvide"
+        , renderButton "btn-primary m-1" "Technologies" "technologies"
+        , renderButton "btn-primary m-1" "Knowledge Graphs" "knowledgeGraphs"
+        , renderButton "btn-primary m-1" "Who Are We" "whoAreWe"
+        , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
+        , renderButton "btn-primary m-1" "Contact Us" "contactUs"
+        ]
+
 
 subBanner : Html msg
-subBanner = h2
-            subBannerCSS
-            [ text "Making and Putting Knowledge Graphs to Work" ]
+subBanner =
+    h2
+        subBannerCSS
+        [ text "Making and Putting Knowledge Graphs to Work" ]
+
 
 renderColumn : List (Html msg) -> Html msg
 renderColumn content =
     div
-        [ Attr.class "col-sm", Attr.style "padding-left" "100px"]
+        [ Attr.class "col-sm", Attr.style "padding-left" "100px" ]
         content
 
-renderImage : String -> Html msg
-renderImage image = img
+
+renderImage : ImageFilePath -> Html msg
+renderImage image =
+    img
         [ Attr.src image
-         , Attr.style "display" "inlineBlock"
-         , Attr.style "width" "1000px"
-         , Attr.style "padding" "20px"
+        , Attr.style "display" "inlineBlock"
+        , Attr.style "width" "1000px"
+        , Attr.style "padding" "20px"
         ]
         []
 
-topicWithImageOnLeft : String -> String -> String -> List (Html msg) -> Html msg
-topicWithImageOnLeft idRef heading image content = div 
-       [Attr.id idRef, Attr.class "row"]
-       [ 
-         renderColumn [renderImage image]
-       , renderColumn 
-            [h2 [Attr.style "font-weight" "bold"] [text heading]
-           , div 
-           [  Attr.style "padding-right" "200px"
-            , Attr.style "font-size" "1.5rem"
-           ] content
-           ]
-       ]
 
-topicWithImageOnRight : String -> String -> String -> List (Html msg) -> Html msg
-topicWithImageOnRight idRef heading image content = div 
-       [Attr.id idRef, Attr.class "row"]
-       [ 
-        renderColumn 
-            [h2 [Attr.style "font-weight" "bold"] [text heading]
-           , div 
-           [  Attr.style "padding-right" "200px"
-            , Attr.style "font-size" "1.5rem"
-           ] content
-           ]
-        ,renderColumn [renderImage image]
-       ]
+renderTopic : TopicRowType -> ImageFilePath -> String -> List (Html msg) -> Html msg
+renderTopic topicRowType idRef heading content =
+    let
+        contentPart =
+            [ h2 [ Attr.style "font-weight" "bold" ] [ text heading ]
+            , div
+                [ Attr.style "padding-right" "200px"
+                , Attr.style "font-size" "1.5rem"
+                ]
+                content
+            ]
+    in
+    case topicRowType of
+        ImageOnLeft image ->
+            div [ Attr.id idRef, Attr.class "row" ]
+                [ renderColumn [ renderImage image ], renderColumn contentPart ]
 
-interoperability_image1 = "images/iStock-689799380.jpg"
+        ImageOnRight image ->
+            div [ Attr.id idRef, Attr.class "row" ]
+                [ renderColumn contentPart, renderColumn [ renderImage image ] ]
 
-interoperability_image2 = "images/iStock-959888418.jpg"
-hvac_image1 = "images/iStock-1437896463.jpg"
-medicine_image1 = "images/iStock-1499814869.jpg"
+        NoImage ->
+            div [ Attr.id idRef, Attr.class "row" ] [ renderColumn contentPart ]
+
+
 homePageContent : Html msg
-homePageContent = div [Attr.class "row"]
-      [
-        topicWithImageOnLeft  "aboutUs" "About Us" interoperability_image1 
-           [ markdownToHTML whyInteroptx]
-       , topicWithImageOnRight "knowledgeGraphs" "Knowledge Graphs and Semantic Interoperability"
-            interoperability_image2
-            [ markdownToHTML semanticInteroperability]
-      , topicWithImageOnLeft "whyThisIsImportant" "Why this is important" 
-            medicine_image1 
-            [ markdownToHTML importanceContent]
-      , topicWithImageOnRight "technologies" "Technologies"
-            medicine_image1
-           [ markdownToHTML technologies]
-      , topicWithImageOnLeft "whatWeProvide" "What we provide"
-            medicine_image1
-            [markdownToHTML whatWeProvide]
-      , topicWithImageOnLeft  "whoAreWe" "Who We Are"  
-            medicine_image1 
-            [ markdownToHTML whoWeAre]
-      , topicWithImageOnLeft  "contactUs" "For more information" medicine_image1 
-            [ markdownToHTML contactUs] 
-      ] 
-   
+homePageContent =
+    div [ Attr.class "row" ]
+        [ renderTopic (ImageOnLeft interoperability_image1)
+            "aboutUs"
+            "About Us"
+            [ markdownToHTML whyInteroptx ]
+        , renderTopic (ImageOnRight medicine_image1)
+            "whyThisIsImportant"
+            "Why this is important"
+            [ markdownToHTML importanceContent ]
+        , renderTopic (ImageOnLeft interoperability_image2)
+            "knowledgeGraphs"
+            "Knowledge Graphs and Semantic Interoperability"
+            [ markdownToHTML semanticInteroperability ]
+        , renderTopic (ImageOnRight medicine_image1)
+            "technologies"
+            "Technologies"
+            [ markdownToHTML technologies ]
+        , renderTopic (ImageOnLeft medicine_image1)
+            "whatWeProvide"
+            "What we provide"
+            [ markdownToHTML whatWeProvide ]
+        , renderTopic (ImageOnRight medicine_image1)
+            "whoAreWe"
+            "Who We Are"
+            [ markdownToHTML whoWeAre ]
+        , renderTopic NoImage
+            "contactUs"
+            "For more information"
+            [ markdownToHTML contactUs ]
+        , div [ Attr.class "row" ] [ renderColumn [ renderImage hvac_image1 ] ]
+        ]
+
 
 layout : Auth.User -> Model -> Layouts.Layout
 layout user model =
     Layouts.HeaderAndFooter
         { headerAndFooter =
-            { title = "Home -InteroptX"
+            { title = "Home - InteroptX"
             , user = user
             }
         }
@@ -230,7 +253,7 @@ type alias Model =
     , token : Maybe String
     , isFavoriteButtonClicked : Bool
     , clickedTag : String
-    , anchorId : String 
+    , anchorId : String
     }
 
 
@@ -294,8 +317,8 @@ update : Auth.User -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
 update maybeUser _ msg model =
     case msg of
         SamePageNavigation anchorId ->
-            ( { model | anchorId = anchorId } 
-            , replaceUrl ( "#" ++ anchorId)
+            ( { model | anchorId = anchorId }
+            , replaceUrl ("#" ++ anchorId)
             )
 
         ArticleApiResponded (Ok listOfArticle) ->
@@ -454,24 +477,27 @@ viewBody model =
         [ Attr.class "home-page"
         ]
         [ div
-            [ -- Attr.class "banner"
+            [-- Attr.class "banner"
             ]
             [ div
                 [ Attr.class "container"
                 , Attr.style "max-width" "1600px"
                 ]
                 [ div
-                  bannerCSS
-                  [ mainBanner
-                  , subBanner
-                  ]
+                    bannerCSS
+                    [ mainBanner
+                    , subBanner
+                    ]
                 ]
             ]
         , homePageContent
+
         -- , articleView model
         ]
 
-para1 =  p [] [text """Et labore necessitatibus necessitatibus in quas. 
+
+para1 =
+    p [] [ text """Et labore necessitatibus necessitatibus in quas. 
                 Nostrum exercitationem sequi quas cupiditate possimus blanditiis aut aut quos, 
                 aliquid quos quos vel non quia vitae aut, voluptatem consequatur. 
                 Repellat dicta et neque nihil commodi, nostrum labore rerum at nemo blanditiis, 
@@ -481,8 +507,11 @@ para1 =  p [] [text """Et labore necessitatibus necessitatibus in quas.
                 Consectetur quaerat quas fugit blanditiis ipsum quos quos vitae sequi. 
                 Deserunt sapiente aliquid magnam blanditiis, ipsum, occaecati labore occaecati magnam 
                 facilis quos cupiditate exercitationem unde nihil deserunt ipsum nihil voluptate maiores, 
-                est voluptate sit quasi omnis excepturi, laborum in non enim reiciendis magnam aut."""]
-para2 =  p [] [text """Quos unde hic id doloribus, labore, sit sed aut fugiat aliquid dicta fugiat, labore doloribus, 
+                est voluptate sit quasi omnis excepturi, laborum in non enim reiciendis magnam aut.""" ]
+
+
+para2 =
+    p [] [ text """Quos unde hic id doloribus, labore, sit sed aut fugiat aliquid dicta fugiat, labore doloribus, 
                 laborum sed magnam quaerat occaecati hic, possimus voluptate labore magnam possimus sunt maiores 
                 ducimus neque sequi, blanditiis sunt quos occaecati excepturi facilis blanditiis. 
                 Unde at tenetur quas hic esse, ducimus doloribus tenetur facilis repellat doloribus 
@@ -493,9 +522,11 @@ para2 =  p [] [text """Quos unde hic id doloribus, labore, sit sed aut fugiat al
                 reiciendis consectetur nostrum rerum ducimus id nemo magnam cupiditate blanditiis 
                 magnam voluptatibus reiciendis quaerat voluptate excepturi esse unde hic. 
                 Vitae quia id esse voluptatibus nihil nihil eos vitae dolores quos. 
-                Cupiditate fugiat occaecati ipsum necessitatibus consequuntur."""]
+                Cupiditate fugiat occaecati ipsum necessitatibus consequuntur.""" ]
 
-para3 = p [] [text """At quia eos consectetur reiciendis unde rerum ducimus vitae, et exercitationem 
+
+para3 =
+    p [] [ text """At quia eos consectetur reiciendis unde rerum ducimus vitae, et exercitationem 
                 quas labore unde reiciendis quas in exercitationem cupiditate at reiciendis 
                 qui nulla, at cupiditate reiciendis voluptatibus facilis hic fugit ullam rerum 
                 rerum fugit aliquid, consequuntur, quae, reiciendis sapiente tenetur quos, 
@@ -505,47 +536,53 @@ para3 = p [] [text """At quia eos consectetur reiciendis unde rerum ducimus vita
                 At dicta repellat dicta nihil nostrum qui consectetur. 
                 Voluptatibus esse voluptatem aut fugit numquam eos hic dolores, nihil maiores 
                 esse, dicta cupiditate possimus sunt nihil, voluptate omnis, enim at quae 
-                dicta necessitatibus."""]
+                dicta necessitatibus.""" ]
+
+
 articleView : Model -> Html Msg
 articleView model =
     div
-        [ Attr.class "container page"]
-        [ div 
-            [Attr.class "row"] 
-            [ div 
-              [Attr.class "col-xs-12 col-md-8 offset-md-2"]
-              [ button [onClick (SamePageNavigation "section1") ] [ text "Go to Section 1" ]
-              , button [onClick (SamePageNavigation "section2") ] [ text "Go to Section 2" ]
-              ]
-           , div [ Attr.id "section1", Attr.class "col-xs-12 col-md-8 offset-md-2" ] 
-              [ div [] [
-                h2 [ Attr.style "background-color" "gray"
-                   , Attr.style "height" "90px"
-                   , Attr.style "width" "100%"] 
-                   [text "Section 1"]
-                , para1
-                , para2
-                , para3
-                ]
-              ]
-           , div [ Attr.id "section2", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
-             [ div [] [ 
-                h2 [ Attr.style "background-color" "lightgreen"
-                   , Attr.style "height" "90px"
-                   , Attr.style "width" "100%"]
-                    [text "Section 2" ]
-                , para3
-               ]
-             ]
-          , div
-            [ Attr.class "row"]
+        [ Attr.class "container page" ]
+        [ div
+            [ Attr.class "row" ]
             [ div
-                [ Attr.class "col-md-9"
+                [ Attr.class "col-xs-12 col-md-8 offset-md-2" ]
+                [ button [ onClick (SamePageNavigation "section1") ] [ text "Go to Section 1" ]
+                , button [ onClick (SamePageNavigation "section2") ] [ text "Go to Section 2" ]
                 ]
-                (feedView model :: articleListView model)
-            , popularTagView model
+            , div [ Attr.id "section1", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
+                [ div []
+                    [ h2
+                        [ Attr.style "background-color" "gray"
+                        , Attr.style "height" "90px"
+                        , Attr.style "width" "100%"
+                        ]
+                        [ text "Section 1" ]
+                    , para1
+                    , para2
+                    , para3
+                    ]
+                ]
+            , div [ Attr.id "section2", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
+                [ div []
+                    [ h2
+                        [ Attr.style "background-color" "lightgreen"
+                        , Attr.style "height" "90px"
+                        , Attr.style "width" "100%"
+                        ]
+                        [ text "Section 2" ]
+                    , para3
+                    ]
+                ]
+            , div
+                [ Attr.class "row" ]
+                [ div
+                    [ Attr.class "col-md-9"
+                    ]
+                    (feedView model :: articleListView model)
+                , popularTagView model
+                ]
             ]
-          ]
         ]
 
 
