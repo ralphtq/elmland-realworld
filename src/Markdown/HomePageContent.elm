@@ -82,6 +82,11 @@ Contact us here and here
 """
 
 
+clusteredWebServices_image1 : String
+clusteredWebServices_image1 =
+    "images/ClusteredWebServices.png"
+
+
 interoperability_image1 : ImageFilePath
 interoperability_image1 =
     "images/iStock-689799380.jpg"
@@ -92,11 +97,33 @@ interoperability_image2 =
     "images/iStock-959888418.jpg"
 
 
+interoperability_image3 : String
+interoperability_image3 =
+    "images/iStock-1271619512.jpg"
+
+
+etl_image1 : String
+etl_image1 =
+    "images/iStock-1254882296.jpg"
+
+
+linkedData_image1 : String
+linkedData_image1 =
+    "images/iStock-1266883438.jpg"
+
+
 hvac_image1 : ImageFilePath
 hvac_image1 =
     "images/iStock-1437896463.jpg"
 
+knowledgeGraphApplication_image1 : String
+knowledgeGraphApplication_image1 = "images/KnowledgeGraphApplication.png"
 
 medicine_image1 : ImageFilePath
 medicine_image1 =
     "images/iStock-1499814869.jpg"
+
+
+systemViewpoints_image1 : String
+systemViewpoints_image1 =
+    "images/SystemViewpoints.png"

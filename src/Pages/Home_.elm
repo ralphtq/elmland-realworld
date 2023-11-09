@@ -186,19 +186,19 @@ homePageContent =
             "aboutUs"
             "About Us"
             [ markdownToHTML whyInteroptx ]
-        , renderTopic (ImageOnRight medicine_image1)
+        , renderTopic (ImageOnRight knowledgeGraphApplication_image1)
             "whyThisIsImportant"
             "Why this is important"
             [ markdownToHTML importanceContent ]
-        , renderTopic (ImageOnLeft interoperability_image2)
+        , renderTopic (ImageOnLeft interoperability_image3)
             "knowledgeGraphs"
             "Knowledge Graphs and Semantic Interoperability"
             [ markdownToHTML semanticInteroperability ]
-        , renderTopic (ImageOnRight medicine_image1)
+        , renderTopic (ImageOnRight clusteredWebServices_image1)
             "technologies"
             "Technologies"
             [ markdownToHTML technologies ]
-        , renderTopic (ImageOnLeft medicine_image1)
+        , renderTopic (ImageOnLeft systemViewpoints_image1)
             "whatWeProvide"
             "What we provide"
             [ markdownToHTML whatWeProvide ]
@@ -210,7 +210,8 @@ homePageContent =
             "contactUs"
             "For more information"
             [ markdownToHTML contactUs ]
-        , div [ Attr.class "row" ] [ renderColumn [ renderImage hvac_image1 ] ]
+
+        -- , div [ Attr.class "row" ] [ renderColumn [ renderImage systemViewpoints_image1 ] ]
         ]
 
 
@@ -496,49 +497,6 @@ viewBody model =
         ]
 
 
-para1 =
-    p [] [ text """Et labore necessitatibus necessitatibus in quas. 
-                Nostrum exercitationem sequi quas cupiditate possimus blanditiis aut aut quos, 
-                aliquid quos quos vel non quia vitae aut, voluptatem consequatur. 
-                Repellat dicta et neque nihil commodi, nostrum labore rerum at nemo blanditiis, 
-                qui sunt occaecati hic est ducimus at blanditiis omnis hic voluptate necessitatibus 
-                ullam quos qui quas omnis vitae consequatur unde ducimus error dicta est quae est est 
-                voluptate at maiores commodi non labore quas dolores nostrum, aut nostrum. 
-                Consectetur quaerat quas fugit blanditiis ipsum quos quos vitae sequi. 
-                Deserunt sapiente aliquid magnam blanditiis, ipsum, occaecati labore occaecati magnam 
-                facilis quos cupiditate exercitationem unde nihil deserunt ipsum nihil voluptate maiores, 
-                est voluptate sit quasi omnis excepturi, laborum in non enim reiciendis magnam aut.""" ]
-
-
-para2 =
-    p [] [ text """Quos unde hic id doloribus, labore, sit sed aut fugiat aliquid dicta fugiat, labore doloribus, 
-                laborum sed magnam quaerat occaecati hic, possimus voluptate labore magnam possimus sunt maiores 
-                ducimus neque sequi, blanditiis sunt quos occaecati excepturi facilis blanditiis. 
-                Unde at tenetur quas hic esse, ducimus doloribus tenetur facilis repellat doloribus 
-                excepturi excepturi aliquid voluptatibus sunt necessitatibus consequuntur laborum neque 
-                nostrum necessitatibus nihil et nemo enim quasi labore beatae ullam id est excepturi 
-                consequuntur nostrum nulla in, hic asperiores. 
-                Aut maiores quas consequuntur voluptatem enim est, exercitationem quasi sed quaerat 
-                reiciendis consectetur nostrum rerum ducimus id nemo magnam cupiditate blanditiis 
-                magnam voluptatibus reiciendis quaerat voluptate excepturi esse unde hic. 
-                Vitae quia id esse voluptatibus nihil nihil eos vitae dolores quos. 
-                Cupiditate fugiat occaecati ipsum necessitatibus consequuntur.""" ]
-
-
-para3 =
-    p [] [ text """At quia eos consectetur reiciendis unde rerum ducimus vitae, et exercitationem 
-                quas labore unde reiciendis quas in exercitationem cupiditate at reiciendis 
-                qui nulla, at cupiditate reiciendis voluptatibus facilis hic fugit ullam rerum 
-                rerum fugit aliquid, consequuntur, quae, reiciendis sapiente tenetur quos, 
-                reiciendis neque error asperiores sequi, hic enim tenetur error. 
-                Blanditiis beatae quia tenetur esse. 
-                Reiciendis voluptatibus numquam beatae id repellat possimus sunt. 
-                At dicta repellat dicta nihil nostrum qui consectetur. 
-                Voluptatibus esse voluptatem aut fugit numquam eos hic dolores, nihil maiores 
-                esse, dicta cupiditate possimus sunt nihil, voluptate omnis, enim at quae 
-                dicta necessitatibus.""" ]
-
-
 articleView : Model -> Html Msg
 articleView model =
     div
@@ -546,35 +504,6 @@ articleView model =
         [ div
             [ Attr.class "row" ]
             [ div
-                [ Attr.class "col-xs-12 col-md-8 offset-md-2" ]
-                [ button [ onClick (SamePageNavigation "section1") ] [ text "Go to Section 1" ]
-                , button [ onClick (SamePageNavigation "section2") ] [ text "Go to Section 2" ]
-                ]
-            , div [ Attr.id "section1", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
-                [ div []
-                    [ h2
-                        [ Attr.style "background-color" "gray"
-                        , Attr.style "height" "90px"
-                        , Attr.style "width" "100%"
-                        ]
-                        [ text "Section 1" ]
-                    , para1
-                    , para2
-                    , para3
-                    ]
-                ]
-            , div [ Attr.id "section2", Attr.class "col-xs-12 col-md-8 offset-md-2" ]
-                [ div []
-                    [ h2
-                        [ Attr.style "background-color" "lightgreen"
-                        , Attr.style "height" "90px"
-                        , Attr.style "width" "100%"
-                        ]
-                        [ text "Section 2" ]
-                    , para3
-                    ]
-                ]
-            , div
                 [ Attr.class "row" ]
                 [ div
                     [ Attr.class "col-md-9"
