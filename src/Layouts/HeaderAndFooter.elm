@@ -232,11 +232,11 @@ attributionContent =
             [ Attr.class "col text-center"
             , Attr.style "padding-left" "20px"
             ]
-            [ text "Built on code from the interactive learning project from"
+            [ text "Built on code from "
             , a
-                [ Attr.href "https://thinkster.io"
+                [ Attr.href "https://github.com/elm-land/realworld-app"
                 ]
-                [ text "Thinkster" ]
+                [ text "elm-land RealWorld example App" ]
 
             -- , text ". Code & design licensed under MIT."
             ]

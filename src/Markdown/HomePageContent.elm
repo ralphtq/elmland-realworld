@@ -106,7 +106,8 @@ He was a thought leader and contributor to IBM's Object-Oriented methods.
 
 minorGordonBio =
     """
-**Minor Gordon** is ..
+**Minor Gordon** is a full-stack developer and mentor for advanced applications that use modern approaches to
+programming and software engineering practices.
 
 From January 2021 to September 2021, he directed engagements with major clients in the media, manufacturing, and pharmaceutical sectors, 
 from pre-sale requirements elicitation and RFP responses to post-sale implementation of the TopBraid EDG data governance platform.
