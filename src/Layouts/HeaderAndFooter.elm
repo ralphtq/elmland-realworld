@@ -78,8 +78,8 @@ view settings route { fromMsg, model, content } =
     { title = settings.title
     , body =
         [ Html.div [ Attr.class "layout" ]
-            [ navbar settings.user route
-            , Html.div [ Attr.class "page" ] content.body
+            [ --  navbar settings.user route
+              Html.div [ Attr.class "page" ] content.body
             , footerView
             ]
         ]
@@ -180,35 +180,78 @@ signedOutNavbar routes =
         routes
 
 
+linkedIn : Html msg
+linkedIn =
+    a
+        [ Attr.class ""
+        , Attr.style "hover" "text-purple-600 no-underline"
+        , Attr.href "https://www.linkedin.com/interoptx"
+        ]
+        [ text "LinkedIn" ]
+
+
+mailUs =
+    div []
+        [ img
+            [ Attr.src "https://assets-global.website-files.com/62335a6993c23176d6fab483/62e2a69ab0a3485f3b1c66a3_mail.svg"
+            , Attr.style "width" "24px"
+            , Attr.style "loading" "lazy"
+            ]
+            []
+        , span []
+            [ text "info@interoptx.com" ]
+        ]
+
+
+socialLinksContent : Html msg
+socialLinksContent =
+    div [ Attr.class "row" ]
+        [ div
+            [ Attr.class "col text-center"
+            , Attr.style "padding-right" "40px"
+            ]
+            [ linkedIn ]
+        , div [ Attr.class "col text-center" ]
+            [ mailUs ]
+        ]
+
+
+attributionContent : Html msg
+attributionContent =
+    div [ Attr.class "row" ]
+        [ div
+            [ Attr.class "col text-center"
+            ]
+            [ text "Website generated using "
+            , a
+                [ Attr.href "https://elm.land/"
+                ]
+                [ text "Elm-land" ]
+            ]
+        , div
+            [ Attr.class "col text-center"
+            , Attr.style "padding-left" "20px"
+            ]
+            [ text "Built on code from the interactive learning project from"
+            , a
+                [ Attr.href "https://thinkster.io"
+                ]
+                [ text "Thinkster" ]
+
+            -- , text ". Code & design licensed under MIT."
+            ]
+
+        -- ,  p [] [text "© Interoptx"]
+        ]
+
+
 footerView : Html msg
 footerView =
     footer []
         [ div
             [ Attr.class "container"
             ]
-            [ a
-                [ Attr.href "/"
-                , Attr.class "logo-font"
-                ]
-                [ text "This is " ]
-            , span
-                [ Attr.class "attribution"
-                ]
-                [ text "An interactive semantic technology explorer from "
-                , a
-                    [ Attr.href "https://interoptx.com"
-                    ]
-                    [ text "InteroptX" ]
-                ]
-            , span
-                [ Attr.class "attribution"
-                ]
-                [ text "Inspired by the interactive learning project from"
-                , a
-                    [ Attr.href "https://thinkster.io"
-                    ]
-                    [ text "Thinkster" ]
-                , text ". Code & design licensed under MIT."
-                ]
+            [ socialLinksContent
+            , attributionContent
             ]
         ]

@@ -179,9 +179,29 @@ renderTopic topicRowType idRef heading content =
             div [ Attr.id idRef, Attr.class "row" ] [ renderColumn contentPart ]
 
 
-homePageContent : Html msg
-homePageContent =
-    div [ Attr.class "row" ]
+whoWeAre : Html msg
+whoWeAre =
+    div [Attr.class "container"]
+     [div [ Attr.class "row" ]
+        [ div
+            [ Attr.class "col text-center"
+            , Attr.style "padding-right" "40px"
+            , Attr.style "font-size" "0.8em"
+            ]
+            [ markdownToHTML ralphHodgsonBio ]
+        , div
+            [ Attr.class "col text-center"
+            , Attr.style "padding-right" "40px"
+            , Attr.style "font-size" "0.8em"
+            ]
+            [ markdownToHTML minorGordonBio ]
+        ]
+     ]
+
+
+topicRows : Html msg
+topicRows =
+    div []
         [ renderTopic (ImageOnLeft interoperability_image1)
             "aboutUs"
             "About Us"
@@ -202,16 +222,21 @@ homePageContent =
             "whatWeProvide"
             "What we provide"
             [ markdownToHTML whatWeProvide ]
-        , renderTopic (ImageOnRight medicine_image1)
+        , renderTopic (ImageOnRight systemViewpoints_image1)
+            "whyUsButton"
+            "Why Us"
+            [ markdownToHTML whyUs ]
+        , renderTopic NoImage
             "whoAreWe"
             "Who We Are"
-            [ markdownToHTML whoWeAre ]
-        , renderTopic NoImage
-            "contactUs"
-            "For more information"
-            [ markdownToHTML contactUs ]
+            [ whoWeAre]
+        ]
 
-        -- , div [ Attr.class "row" ] [ renderColumn [ renderImage systemViewpoints_image1 ] ]
+
+homePageContent : Html msg
+homePageContent =
+    div [ ]
+        [ topicRows
         ]
 
 
