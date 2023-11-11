@@ -198,7 +198,7 @@ mailUs =
             , Attr.style "loading" "lazy"
             ]
             []
-        , span []
+        , a [ Attr.href "mailto:info@interoptx.com" ]
             [ text "info@interoptx.com" ]
         ]
 
@@ -232,7 +232,7 @@ attributionContent =
             [ Attr.class "col text-center"
             , Attr.style "padding-left" "20px"
             ]
-            [ text "Built on code from "
+            [ text "Built from code at "
             , a
                 [ Attr.href "https://github.com/elm-land/realworld-app"
                 ]

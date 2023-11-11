@@ -41,11 +41,19 @@ Together they achieve high quality, high performance and scalable transformation
 whatWeProvide : MarkdownString
 whatWeProvide =
     """
-InteroptX provides computing frameworks, libraries and automation for data harmonization, 
+**InteroptX** provides consulting services and software assets for building
+the computing frameworks, libraries and automation needed for data harmonization, 
 aggregation and transformations.
-Knowledge graphs are based on semantic technology standards.
-Modern software engineering approaches are based on Functional Programming.
-Together they achieve high quality, high performance and scalable transformations.
+
+We provide mentoring and jumpstarts on software engineering approaches for
+
+* Functional Programming in Scala, Python and Elm
+* Continuous integration and deployment
+
+For the building of ontologies based on RDF and SHACL, and the use of SPARQL, **InteroptX** provides mentoring
+and best practices.
+
+Our services address the need to achieve high quality, high performance and scalable knowledge graph based applications.
 """
 
 
@@ -70,10 +78,15 @@ to working with knowledge graphs in the following languages, and tools:
 """
 
 
-semanticInteroperability : MarkdownString
-semanticInteroperability =
+knowledgeGraphs : MarkdownString
+knowledgeGraphs =
     """
-  Semantic Interoperability explained.
+  A **Knowledge Graph** is a set of nodes, links and attributes that define statements that
+capture concepts, constraints, rules and data that provide a machine-processable data structure.
+
+The semantics of the knowledge graph can be represented in RDF, SHACL, OWL or in property graphs.alias
+
+Our interest is in RDF and SHACL representations.
 """
 
 
@@ -168,6 +181,16 @@ knowledgeGraphApplication_image1 =
 medicine_image1 : ImageFilePath
 medicine_image1 =
     "images/iStock-1499814869.jpg"
+
+
+minorGordon_image1 : String
+minorGordon_image1 =
+    "images/MinorGordon.jpg"
+
+
+ralphHodgson_image1 : String
+ralphHodgson_image1 =
+    "images/RalphHodgson.jpg"
 
 
 snomed_transformation_image1 : ImageFilePath

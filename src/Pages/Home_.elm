@@ -179,22 +179,43 @@ renderTopic topicRowType idRef heading content =
             div [ Attr.id idRef, Attr.class "row" ] [ renderColumn contentPart ]
 
 
+thumbNailMugShootCSS : ImageFilePath -> List (Attribute msg)
+thumbNailMugShootCSS imagePath =
+    [ Attr.style "width" "160px"
+    , Attr.style "height" "160px"
+    , Attr.style "box-sizing" "border-box"
+    , Attr.style "border-radius" "50%"
+    , Attr.src imagePath
+    ]
+
+
 whoWeAre : Html msg
 whoWeAre =
     div [ Attr.class "container" ]
         [ div [ Attr.class "row" ]
             [ div
-                [ Attr.class "col text-center"
+                [ Attr.class "col-sm1"
                 , Attr.style "padding-right" "40px"
                 , Attr.style "font-size" "0.8em"
                 ]
                 [ markdownToHTML ralphHodgsonBio ]
-            , div
-                [ Attr.class "col text-center"
+            , div [ Attr.class "col-sm1" ]
+                [ img
+                    (thumbNailMugShootCSS ralphHodgson_image1)
+                    []
+                ]
+            ]
+        , div [ Attr.class "row" ]
+            [ div
+                [ Attr.class "col-sm1"
                 , Attr.style "padding-right" "40px"
                 , Attr.style "font-size" "0.8em"
                 ]
                 [ markdownToHTML minorGordonBio ]
+            , div [ Attr.class "col-sm1" ]
+                [ img (thumbNailMugShootCSS minorGordon_image1)
+                    []
+                ]
             ]
         ]
 
@@ -212,8 +233,8 @@ topicRows =
             [ markdownToHTML importanceContent ]
         , renderTopic (ImageOnLeft interoperability_image3)
             "knowledgeGraphs"
-            "Knowledge Graphs and Semantic Interoperability"
-            [ markdownToHTML semanticInteroperability ]
+            "Knowledge Graphs"
+            [ markdownToHTML knowledgeGraphs ]
         , renderTopic (ImageOnRight clusteredWebServices_image1)
             "technologies"
             "Technologies"
