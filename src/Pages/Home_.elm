@@ -4,28 +4,268 @@ import Api
 import Api.Article exposing (Article)
 import Api.PopularTagsList
 import Auth
+import Css exposing (..)
 import Date
-import Effect exposing (Effect)
+import Effect exposing (Effect, replaceUrl)
 import Html exposing (..)
 import Html.Attributes as Attr
 import Html.Events exposing (onClick)
 import Http
 import Iso8601 exposing (toTime)
 import Layouts
+import Markdown.Block as Markdown
+import Markdown.HomePageContent exposing (..)
+import Markdown.Parser as Markdown
+import Markdown.Renderer as Markdown
 import Page exposing (Page)
 import Route exposing (Route)
-import Shared 
+import Shared
 import Shared.Model exposing (SignInStatus(..))
 import Shared.Msg
+import Shared.Types exposing (..)
 import Time exposing (Month(..), utc)
 import View exposing (View)
+
+
+markdownToHTML : MarkdownString -> Html msg
+markdownToHTML mdText =
+    mdText
+        |> Markdown.parse
+        |> Result.mapError (List.map Markdown.deadEndToString >> String.join "\n")
+        |> Result.andThen (Markdown.render Markdown.defaultHtmlRenderer)
+        |> Result.map (Html.main_ [])
+        |> Result.withDefault (Html.text "Error occurred. This shouldn't happen.")
+
+
+logo : String -> Html msg
+logo logoFilePath =
+    img
+        [ Attr.src logoFilePath
+        , Attr.style "display" "inlineBlock"
+        , Attr.style "padding" "20px"
+        ]
+        []
+
+
+
+--     , hover
+--         [ borderColor theme.primary
+--         , borderRadius (px 10)
+--         ]
+
+
+theme : { secondary : Color, primary : Color }
+theme =
+    { primary = hex "55af6a"
+    , secondary = rgb 250 240 230
+    }
+
+
+bannerCSS : List (Attribute msg)
+bannerCSS =
+    [ Attr.style "background-color" "rgb(250,250,255)"
+    , Attr.style "padding" "4px"
+    ]
+
+
+bannerLinkCSS : List (Attribute msg)
+bannerLinkCSS =
+    [ Attr.style "fontFamily" "sansSerif"
+    , Attr.style "background-color" "rgb(250,250,255)"
+    , Attr.style "border-color" "rgb(250,250,255)"
+    , Attr.style "font-size" "32px"
+    , Attr.style "font-weight" "bold"
+    ]
+
+
+subBannerCSS : List (Attribute msg)
+subBannerCSS =
+    [ Attr.style "fontFamily" "sansSerif"
+    , Attr.style "text-align" "center"
+    , Attr.style "font-size" "48px"
+    , Attr.style "font-weight" "bold"
+    , Attr.style "font-style" "oblique"
+    , Attr.style "padding-top" "-100px"
+    , Attr.style "padding-bottom" "30px"
+    ]
+
+
+websiteNameCSS : List (Attribute msg)
+websiteNameCSS =
+    [ Attr.style "padding-bottom" "60px"
+    , Attr.style "font-size" "48px"
+    , Attr.style "padding-top" "40px"
+    , Attr.style "margin-left" "-100px"
+    ]
+
+
+renderButton : String -> String -> String -> Html Msg
+renderButton styleClass label idRef =
+    button
+        [ Attr.class <| "btn " ++ styleClass
+        , Attr.style "display" "flex"
+        , Attr.style "color" "black"
+        , Attr.style "background-color" "rgb(250,250,255)"
+        , Attr.style "border-color" "rgb(250,250,255)"
+        , Attr.style "font-size" "24px"
+        , Attr.style "height" "32px"
+        , onClick (SamePageNavigation idRef)
+        ]
+        [ text label ]
+
+
+mainBanner : Html Msg
+mainBanner =
+    div [ Attr.class "row" ]
+        [ div [ Attr.class "col text-center" ]
+            [ logo "images/interoptx-icon.png" ]
+        , renderColumn [ h3 websiteNameCSS [ text "InteroptX" ] ]
+        , renderButton "btn-primary m-1" "What we provide" "whatWeProvide"
+        , renderButton "btn-primary m-1" "Technologies" "technologies"
+        , renderButton "btn-primary m-1" "Knowledge Graphs" "knowledgeGraphs"
+        , renderButton "btn-primary m-1" "Who Are We" "whoAreWe"
+        , renderButton "btn-primary m-1" "Why Us" "whyUsButton"
+        , renderButton "btn-primary m-1" "Contact Us" "contactUs"
+        ]
+
+
+subBanner : Html msg
+subBanner =
+    h2
+        subBannerCSS
+        [ text "Making and Putting Knowledge Graphs to Work" ]
+
+
+renderColumn : List (Html msg) -> Html msg
+renderColumn content =
+    div
+        [ Attr.class "col-sm", Attr.style "padding-left" "100px" ]
+        content
+
+
+renderImage : ImageFilePath -> Html msg
+renderImage image =
+    img
+        [ Attr.src image
+        , Attr.style "display" "inlineBlock"
+        , Attr.style "width" "1000px"
+        , Attr.style "padding" "20px"
+        ]
+        []
+
+
+renderTopic : TopicRowType -> ImageFilePath -> String -> List (Html msg) -> Html msg
+renderTopic topicRowType idRef heading content =
+    let
+        contentPart =
+            [ h2 [ Attr.style "font-weight" "bold" ] [ text heading ]
+            , div
+                [ Attr.style "padding-right" "200px"
+                , Attr.style "font-size" "1.5rem"
+                ]
+                content
+            ]
+    in
+    case topicRowType of
+        ImageOnLeft image ->
+            div [ Attr.id idRef, Attr.class "row" ]
+                [ renderColumn [ renderImage image ], renderColumn contentPart ]
+
+        ImageOnRight image ->
+            div [ Attr.id idRef, Attr.class "row" ]
+                [ renderColumn contentPart, renderColumn [ renderImage image ] ]
+
+        NoImage ->
+            div [ Attr.id idRef, Attr.class "row" ] [ renderColumn contentPart ]
+
+
+thumbNailMugShootCSS : ImageFilePath -> List (Attribute msg)
+thumbNailMugShootCSS imagePath =
+    [ Attr.style "width" "160px"
+    , Attr.style "height" "160px"
+    , Attr.style "box-sizing" "border-box"
+    , Attr.style "border-radius" "50%"
+    , Attr.src imagePath
+    ]
+
+
+whoWeAre : Html msg
+whoWeAre =
+    div [ Attr.class "container" ]
+        [ div [ Attr.class "row" ]
+            [ div
+                [ Attr.class "col-sm1"
+                , Attr.style "padding-right" "40px"
+                , Attr.style "font-size" "0.8em"
+                ]
+                [ markdownToHTML ralphHodgsonBio ]
+            , div [ Attr.class "col-sm1" ]
+                [ img
+                    (thumbNailMugShootCSS ralphHodgson_image1)
+                    []
+                ]
+            ]
+        , div [ Attr.class "row" ]
+            [ div
+                [ Attr.class "col-sm1"
+                , Attr.style "padding-right" "40px"
+                , Attr.style "font-size" "0.8em"
+                ]
+                [ markdownToHTML minorGordonBio ]
+            , div [ Attr.class "col-sm1" ]
+                [ img (thumbNailMugShootCSS minorGordon_image1)
+                    []
+                ]
+            ]
+        ]
+
+
+topicRows : Html msg
+topicRows =
+    div []
+        [ renderTopic (ImageOnLeft interoperability_image1)
+            "aboutUs"
+            "About Us"
+            [ markdownToHTML whyInteroptx ]
+        , renderTopic (ImageOnRight knowledgeGraphApplication_image1)
+            "whyThisIsImportant"
+            "Why this is important"
+            [ markdownToHTML importanceContent ]
+        , renderTopic (ImageOnLeft interoperability_image3)
+            "knowledgeGraphs"
+            "Knowledge Graphs"
+            [ markdownToHTML knowledgeGraphs ]
+        , renderTopic (ImageOnRight clusteredWebServices_image1)
+            "technologies"
+            "Technologies"
+            [ markdownToHTML technologies ]
+        , renderTopic (ImageOnLeft systemViewpoints_image1)
+            "whatWeProvide"
+            "What we provide"
+            [ markdownToHTML whatWeProvide ]
+        , renderTopic (ImageOnRight snomed_transformation_image1)
+            "whyUsButton"
+            "Why Us"
+            [ markdownToHTML whyUs ]
+        , renderTopic NoImage
+            "whoAreWe"
+            "Who We Are"
+            [ whoWeAre ]
+        ]
+
+
+homePageContent : Html msg
+homePageContent =
+    div []
+        [ topicRows
+        ]
 
 
 layout : Auth.User -> Model -> Layouts.Layout
 layout user model =
     Layouts.HeaderAndFooter
         { headerAndFooter =
-            { title = "Home -Conduit"
+            { title = "Home - InteroptX"
             , user = user
             }
         }
@@ -60,6 +300,7 @@ type alias Model =
     , token : Maybe String
     , isFavoriteButtonClicked : Bool
     , clickedTag : String
+    , anchorId : String
     }
 
 
@@ -84,6 +325,7 @@ init maybeUser () =
       , token = token
       , isFavoriteButtonClicked = False
       , clickedTag = ""
+      , anchorId = ""
       }
     , Effect.batch
         [ Api.Article.getFirst20ArticleBy
@@ -115,11 +357,17 @@ type Msg
     | UserClickedOnUnFavoriteArticle String
     | ArticleFavoriteApiResponded (Result Http.Error Article)
     | ArticleUnFavoriteApiResponded (Result Http.Error Article)
+    | SamePageNavigation String
 
 
 update : Auth.User -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
 update maybeUser _ msg model =
     case msg of
+        SamePageNavigation anchorId ->
+            ( { model | anchorId = anchorId }
+            , replaceUrl ("#" ++ anchorId)
+            )
+
         ArticleApiResponded (Ok listOfArticle) ->
             ( { model | articleData = Api.Success listOfArticle }
             , Effect.none
@@ -265,7 +513,7 @@ subscriptions _ =
 
 view : Model -> View Msg
 view model =
-    { title = "Home -Conduit"
+    { title = "Home -InteroptX"
     , body = [ viewBody model ]
     }
 
@@ -276,36 +524,39 @@ viewBody model =
         [ Attr.class "home-page"
         ]
         [ div
-            [ Attr.class "banner"
+            [-- Attr.class "banner"
             ]
             [ div
                 [ Attr.class "container"
+                , Attr.style "max-width" "1600px"
                 ]
-                [ h1
-                    [ Attr.class "logo-font"
+                [ div
+                    bannerCSS
+                    [ mainBanner
+                    , subBanner
                     ]
-                    [ text "conduit" ]
-                , p []
-                    [ text "A place to share your knowledge." ]
                 ]
             ]
-        , articleView model
+        , homePageContent
+
+        -- , articleView model
         ]
 
 
 articleView : Model -> Html Msg
 articleView model =
     div
-        [ Attr.class "container page"
-        ]
+        [ Attr.class "container page" ]
         [ div
-            [ Attr.class "row"
-            ]
+            [ Attr.class "row" ]
             [ div
-                [ Attr.class "col-md-9"
+                [ Attr.class "row" ]
+                [ div
+                    [ Attr.class "col-md-9"
+                    ]
+                    (feedView model :: articleListView model)
+                , popularTagView model
                 ]
-                (feedView model :: articleListView model)
-            , popularTagView model
             ]
         ]
 
@@ -389,7 +640,7 @@ popularTagListView model =
     case model.popularTagData of
         Api.Loading ->
             div []
-                [ Html.text "Loading..."
+                [ text "Loading..."
                 ]
 
         Api.Success popularTagList ->
@@ -398,7 +649,7 @@ popularTagListView model =
 
         Api.Failure httpError ->
             div []
-                [ Html.text (Api.Article.toUserFriendlyMessage httpError)
+                [ text (Api.Article.toUserFriendlyMessage httpError)
                 ]
 
 
@@ -406,7 +657,7 @@ popularTagRowView : String -> Html Msg
 popularTagRowView tag =
     a
         [ Attr.href ""
-        , Html.Events.onClick (UserClickedTagFeeds tag)
+        , onClick (UserClickedTagFeeds tag)
         , Attr.class "tag-pill tag-default"
         ]
         [ text tag ]
@@ -417,7 +668,7 @@ articleListView model =
     case model.articleData of
         Api.Loading ->
             [ div []
-                [ Html.text "Loading..."
+                [ text "Loading..."
                 ]
             ]
 
@@ -426,7 +677,7 @@ articleListView model =
 
         Api.Failure httpError ->
             [ div []
-                [ Html.text (Api.Article.toUserFriendlyMessage httpError)
+                [ text (Api.Article.toUserFriendlyMessage httpError)
                 ]
             ]
 
@@ -467,7 +718,7 @@ articleCardView isFavoriteButtonClicked article =
                     , ( "btn-primary", article.favorited )
                     , ( "disabled", isFavoriteButtonClicked )
                     ]
-                , Html.Events.onClick
+                , onClick
                     (if article.favorited then
                         UserClickedOnUnFavoriteArticle article.slug
 

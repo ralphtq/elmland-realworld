@@ -78,8 +78,8 @@ view settings route { fromMsg, model, content } =
     { title = settings.title
     , body =
         [ Html.div [ Attr.class "layout" ]
-            [ navbar settings.user route
-            , Html.div [ Attr.class "page" ] content.body
+            [ --  navbar settings.user route
+              Html.div [ Attr.class "page" ] content.body
             , footerView
             ]
         ]
@@ -98,7 +98,7 @@ navbar maybeUser route =
                 [ Attr.class "navbar-brand"
                 , Attr.href "/"
                 ]
-                [ text "conduit" ]
+                [ text "interoptx" ]
             , ul
                 [ Attr.class "nav navbar-nav pull-xs-right"
                 ]
@@ -180,26 +180,78 @@ signedOutNavbar routes =
         routes
 
 
+linkedIn : Html msg
+linkedIn =
+    a
+        [ Attr.class ""
+        , Attr.style "hover" "text-purple-600 no-underline"
+        , Attr.href "https://www.linkedin.com/interoptx"
+        ]
+        [ text "LinkedIn" ]
+
+
+mailUs =
+    div []
+        [ img
+            [ Attr.src "https://assets-global.website-files.com/62335a6993c23176d6fab483/62e2a69ab0a3485f3b1c66a3_mail.svg"
+            , Attr.style "width" "24px"
+            , Attr.style "loading" "lazy"
+            ]
+            []
+        , a [ Attr.href "mailto:info@interoptx.com" ]
+            [ text "info@interoptx.com" ]
+        ]
+
+
+socialLinksContent : Html msg
+socialLinksContent =
+    div [ Attr.class "row" ]
+        [ div
+            [ Attr.class "col text-center"
+            , Attr.style "padding-right" "40px"
+            ]
+            [ linkedIn ]
+        , div [ Attr.class "col text-center" ]
+            [ mailUs ]
+        ]
+
+
+attributionContent : Html msg
+attributionContent =
+    div [ Attr.class "row" ]
+        [ div
+            [ Attr.class "col text-center"
+            ]
+            [ text "Website generated using "
+            , a
+                [ Attr.href "https://elm.land/"
+                ]
+                [ text "Elm-land" ]
+            ]
+        , div
+            [ Attr.class "col text-center"
+            , Attr.style "padding-left" "20px"
+            ]
+            [ text "Built from code at "
+            , a
+                [ Attr.href "https://github.com/elm-land/realworld-app"
+                ]
+                [ text "elm-land RealWorld example App" ]
+
+            -- , text ". Code & design licensed under MIT."
+            ]
+
+        -- ,  p [] [text "© Interoptx"]
+        ]
+
+
 footerView : Html msg
 footerView =
     footer []
         [ div
             [ Attr.class "container"
             ]
-            [ a
-                [ Attr.href "/"
-                , Attr.class "logo-font"
-                ]
-                [ text "conduit" ]
-            , span
-                [ Attr.class "attribution"
-                ]
-                [ text "An interactive learning project from"
-                , a
-                    [ Attr.href "https://thinkster.io"
-                    ]
-                    [ text "Thinkster" ]
-                , text ". Code & design licensed under MIT."
-                ]
+            [ socialLinksContent
+            , attributionContent
             ]
         ]

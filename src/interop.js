@@ -11,4 +11,13 @@ export const onReady = ({ app, env }) => {
             localStorage[key] = JSON.stringify(value)
         })
     }
+
+    if (app.ports && app.ports.scrollTo) {
+        app.ports.scrollTo.subscribe(function (id) {
+            var element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 }
