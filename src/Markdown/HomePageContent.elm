@@ -140,17 +140,17 @@ interoperability_image2 =
     "images/iStock-959888418.jpg"
 
 
-interoperability_image3 : String
+interoperability_image3 : ImageFilePath
 interoperability_image3 =
     "images/iStock-1271619512-blurred.png"
 
 
-etl_image1 : String
+etl_image1 : ImageFilePath
 etl_image1 =
     "images/iStock-1254882296.jpg"
 
 
-linkedData_image1 : String
+linkedData_image1 : ImageFilePath
 linkedData_image1 =
     "images/iStock-1266883438.jpg"
 
@@ -160,7 +160,7 @@ hvac_image1 =
     "images/iStock-1437896463.jpg"
 
 
-knowledgeGraphApplication_image1 : String
+knowledgeGraphApplication_image1 : ImageFilePath
 knowledgeGraphApplication_image1 =
     "images/KnowledgeGraphApplication.png"
 
@@ -170,6 +170,11 @@ medicine_image1 =
     "images/iStock-1499814869.jpg"
 
 
-systemViewpoints_image1 : String
+snomed_transformation_image1 : ImageFilePath
+snomed_transformation_image1 =
+    "images/SNOMEDtoSHACL.jpg"
+
+
+systemViewpoints_image1 : ImageFilePath
 systemViewpoints_image1 =
     "images/SystemViewpoints.png"

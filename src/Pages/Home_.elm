@@ -181,22 +181,22 @@ renderTopic topicRowType idRef heading content =
 
 whoWeAre : Html msg
 whoWeAre =
-    div [Attr.class "container"]
-     [div [ Attr.class "row" ]
-        [ div
-            [ Attr.class "col text-center"
-            , Attr.style "padding-right" "40px"
-            , Attr.style "font-size" "0.8em"
+    div [ Attr.class "container" ]
+        [ div [ Attr.class "row" ]
+            [ div
+                [ Attr.class "col text-center"
+                , Attr.style "padding-right" "40px"
+                , Attr.style "font-size" "0.8em"
+                ]
+                [ markdownToHTML ralphHodgsonBio ]
+            , div
+                [ Attr.class "col text-center"
+                , Attr.style "padding-right" "40px"
+                , Attr.style "font-size" "0.8em"
+                ]
+                [ markdownToHTML minorGordonBio ]
             ]
-            [ markdownToHTML ralphHodgsonBio ]
-        , div
-            [ Attr.class "col text-center"
-            , Attr.style "padding-right" "40px"
-            , Attr.style "font-size" "0.8em"
-            ]
-            [ markdownToHTML minorGordonBio ]
         ]
-     ]
 
 
 topicRows : Html msg
@@ -222,20 +222,20 @@ topicRows =
             "whatWeProvide"
             "What we provide"
             [ markdownToHTML whatWeProvide ]
-        , renderTopic (ImageOnRight systemViewpoints_image1)
+        , renderTopic (ImageOnRight snomed_transformation_image1)
             "whyUsButton"
             "Why Us"
             [ markdownToHTML whyUs ]
         , renderTopic NoImage
             "whoAreWe"
             "Who We Are"
-            [ whoWeAre]
+            [ whoWeAre ]
         ]
 
 
 homePageContent : Html msg
 homePageContent =
-    div [ ]
+    div []
         [ topicRows
         ]
 
