@@ -72,7 +72,8 @@ We have knowledge and experience of using both the functional programming and im
 to working with knowledge graphs in the following languages, and tools:
 
 * Java, Scala, Haskell, Python, JavaScript, TypeScript, Elm
-* TopBraid, Jena, Fuseki, GraphDB, ...
+* TopBraid, Jena, Fuseki, GraphDB
+* Visual Studio, IntelliJ, GitHub
 
 
 """
